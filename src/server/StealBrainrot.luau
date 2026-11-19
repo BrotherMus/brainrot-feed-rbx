@@ -6,7 +6,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local BrainrotCatalog = require(ReplicatedStorage.BrainrotCatalog)
 local BaseLock = require(script.Parent.BaseLock)
-local BaseStands = require(script.Parent.BaseStands)
+local BaseStands = require(script.Parent.WorldBases)
 local CarryBrainrot = require(script.Parent.CarryBrainrot)
 local Notify = ReplicatedStorage.Remotes.Notify
 
@@ -49,6 +49,7 @@ function StealBrainrot.stealFromUnlockedBase(thief: Player, base: BaseStands.Bas
 	end
 	local takeBack = Instance.new("ProximityPrompt")
 	takeBack.Name = "TakeBackPrompt"
+	takeBack.Style = Enum.ProximityPromptStyle.Custom
 	takeBack.ActionText = "Take back"
 	takeBack.ObjectText = "STOLEN " .. name
 	takeBack.MaxActivationDistance = 13

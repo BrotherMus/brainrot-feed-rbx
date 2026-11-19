@@ -7,7 +7,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local GameConfig = require(ReplicatedStorage.GameConfig)
 local AlgorithmBoostEvent = require(script.Parent.AlgorithmBoostEvent)
 local BaseLock = require(script.Parent.BaseLock)
-local BaseStands = require(script.Parent.BaseStands)
+local BaseStands = require(script.Parent.WorldBases)
 local CarryBrainrot = require(script.Parent.CarryBrainrot)
 local FeedConveyor = require(script.Parent.FeedConveyor)
 local GiantThumbHazard = require(script.Parent.GiantThumbHazard)
@@ -72,15 +72,6 @@ Players.PlayerRemoving:Connect(onPlayerRemoving)
 for _, player in Players:GetPlayers() do
 	task.spawn(onPlayerAdded, player)
 end
-
-task.spawn(function()
-	while true do
-		task.wait(90)
-		for _, player in Players:GetPlayers() do
-			PlayerState.saveProfile(player)
-		end
-	end
-end)
 
 game:BindToClose(function()
 	for _, player in Players:GetPlayers() do

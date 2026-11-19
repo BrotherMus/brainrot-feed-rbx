@@ -1,13 +1,12 @@
--- CarryBrainrot: one brainrot rides above a player's head, from the Feed (or a rival's
--- stand) to a stand of their own. Carrying slows the player down. Dropping it (the Giant
--- Thumb, dying) leaves it on the glass for anyone to grab, unless it was stolen: then it
--- runs home to its owner.
+-- CarryBrainrot: one brainrot rides on a player's head from the Feed (or a rival's stand)
+-- to their own stand. Carrying slows them. Dropped, it lies on the glass for anyone to
+-- grab, unless it was stolen: then it goes home to its owner.
 local Debris = game:GetService("Debris")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local BrainrotBuilder = require(ReplicatedStorage.BrainrotBuilder)
 local BrainrotCatalog = require(ReplicatedStorage.BrainrotCatalog)
 local GameConfig = require(ReplicatedStorage.GameConfig)
+local BrainrotModels = require(script.Parent.BrainrotModels)
 local PlayerState = require(script.Parent.PlayerState)
 
 local CarryBrainrot = {}
@@ -36,13 +35,14 @@ local function leaveOnTheGlass(id: string, mutation: string?, position: Vector3)
 	local folder = workspace:FindFirstChild("Dropped") or Instance.new("Folder")
 	folder.Name = "Dropped"
 	folder.Parent = workspace
-	local model = BrainrotBuilder.buildFromParts(id, mutation)
-	BrainrotBuilder.setTagMoney(model, nil, BrainrotCatalog.incomeOf(id, mutation))
+	local model = BrainrotModels.cloneWithMutation(id, mutation)
+	BrainrotModels.setTagMoney(model, nil, BrainrotCatalog.incomeOf(id, mutation))
 	local x = math.clamp(position.X, -125, 125)
 	local z = math.clamp(position.Z, -210, 210)
 	model:PivotTo(CFrame.new(x, 0.45, z))
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.ActionText = "Pick up"
+	prompt.Style = Enum.ProximityPromptStyle.Custom
 	prompt.ObjectText = model.Name
 	prompt.MaxActivationDistance = 12
 	prompt.RequiresLineOfSight = false
@@ -72,8 +72,8 @@ function CarryBrainrot.pickUp(player: Player, id: string, mutation: string?, ret
 	if carried[player] or not rootPart or not humanoid or humanoid.Health <= 0 then
 		return nil
 	end
-	local model = BrainrotBuilder.buildFromParts(id, mutation)
-	BrainrotBuilder.setTagMoney(model, nil, BrainrotCatalog.incomeOf(id, mutation))
+	local model = BrainrotModels.cloneWithMutation(id, mutation)
+	BrainrotModels.setTagMoney(model, nil, BrainrotCatalog.incomeOf(id, mutation))
 	model:PivotTo(rootPart.CFrame * CFrame.new(0, 2.8, 0))
 	local modelRoot = model.PrimaryPart :: BasePart
 	modelRoot.Anchored = false

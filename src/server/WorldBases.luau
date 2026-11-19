@@ -1,11 +1,11 @@
--- BaseStands: the eight bases and their stands. Hands a base to each player, puts the
+-- WorldBases: the eight bases of the phone world and their stands. Hands a base to each player, puts the
 -- brainrot they carry on a stand, sells one back, rebuilds a saved base when its owner
 -- returns, and opens more stands as the MORE STANDS upgrade is bought.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local BrainrotBuilder = require(ReplicatedStorage.BrainrotBuilder)
 local BrainrotCatalog = require(ReplicatedStorage.BrainrotCatalog)
 local GameConfig = require(ReplicatedStorage.GameConfig)
+local BrainrotModels = require(script.Parent.BrainrotModels)
 local CarryBrainrot = require(script.Parent.CarryBrainrot)
 local PlayerState = require(script.Parent.PlayerState)
 local Notify = ReplicatedStorage.Remotes.Notify
@@ -38,8 +38,8 @@ function BaseStands.setStandBrainrot(base: Base, standIndex: number, id: string,
 	local slot = base.stands[standIndex]
 	local pedestal = slot.model.PrimaryPart :: BasePart
 	local top = pedestal.Position + Vector3.new(0, 1.1, 0)
-	local brainrot = BrainrotBuilder.buildFromParts(id, mutation)
-	BrainrotBuilder.setTagMoney(brainrot, nil, BrainrotCatalog.incomeOf(id, mutation))
+	local brainrot = BrainrotModels.cloneWithMutation(id, mutation)
+	BrainrotModels.setTagMoney(brainrot, nil, BrainrotCatalog.incomeOf(id, mutation))
 	brainrot:PivotTo(CFrame.lookAt(top, top + Vector3.new(-base.side, 0, 0)))
 	brainrot.Parent = slot.model
 	slot.brainrot, slot.id, slot.mutation = brainrot, id, mutation
@@ -242,8 +242,42 @@ function BaseStands.spawnCFrame(base: Base): CFrame
 	return CFrame.lookAt(spawn.Position + Vector3.new(0, 4, 0), spawn.Position + Vector3.new(-base.side * 30, 4, 0))
 end
 
+-- For the tour: opens every stand of each owned base and fills the free ones with a
+-- showcase (every rarity, each mutation), so a reviewer can reach the late-game screens.
+local SHOWCASE = {
+	{ "pingu_pingaling" }, { "captcha_capybarra", "Trending" }, { "memelord_mooso" }, { "subwoofer_wolfo" },
+	{ "gigabyto_mammotho", "LegendaryMeme" }, { "cookie_crabbo" }, { "glitchy_giraffo" },
+	{ "doomscrollo_dolphino", "Viral" }, { "el_gran_feedalotl" }, { "the_final_notificorn" },
+}
+
+-- The tour's one entry point: "Showcase" fills the bases, "SwipeNow" brings the Giant
+-- Thumb, "RaidNow" sends the Scam Bot, "BoostNow" starts an Algorithm Boost. It fires a
+-- signal the running game listens to, so it works from the command bar too.
+function BaseStands.tour(signalName: string)
+	game:GetService("ServerStorage").TourSignals[signalName]:Fire()
+end
+
+local function fillWithShowcase()
+	for _, base in bases do
+		local profile = base.owner and PlayerState.get(base.owner)
+		if base.owner and profile then
+			profile.upgrades.Stands = GameConfig.Upgrades.Stands.maxLevel
+			profile.cash += 50_000
+			for standIndex, pick in SHOWCASE do
+				if not base.stands[standIndex].id then
+					BaseStands.setStandBrainrot(base, standIndex, pick[1], pick[2])
+					PlayerState.markDiscovered(base.owner, pick[1])
+				end
+			end
+			PlayerState.publish(base.owner)
+			BaseStands.refreshStands(base)
+		end
+	end
+end
+
 -- Reads the baked bases out of the workspace and wires every stand's prompt.
 function BaseStands.init()
+	game:GetService("ServerStorage").TourSignals.Showcase.Event:Connect(fillWithShowcase)
 	for index = 1, 8 do
 		local model = workspace.Bases:FindFirstChild("Base" .. index) :: Model
 		local base: Base = { index = index, model = model, side = model:GetAttribute("Side"), owner = nil, stands = {}, lockedUntil = 0, lockReadyAt = 0 }

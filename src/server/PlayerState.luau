@@ -1,7 +1,6 @@
--- PlayerState: the one place a player's progress lives on the server. Cash, rebirths,
--- upgrade levels, the index of brainrots found and what stands on which stand. Every
--- other module reads and writes through here; the client only sees the attributes that
--- publish() copies onto the Player. Saved to a DataStore when the game runs live.
+-- PlayerState: the one place a player's progress lives. Cash, rebirths, upgrade levels,
+-- the index of brainrots found and what stands on which stand. The client only sees the
+-- attributes publish() copies onto the Player. Saved to a DataStore in the live game.
 local DataStoreService = game:GetService("DataStoreService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
@@ -97,17 +96,6 @@ function PlayerState.markDiscovered(player: Player, brainrotId: string)
 		PlayerState.publish(player)
 	end
 end
-
--- For the tour: gives every player `amount` cash, so a reviewer can reach the later screens.
-function PlayerState.grantTourCash(amount: number)
-	game:GetService("ServerStorage").TourSignals.GrantCash:Fire(amount)
-end
-
-game:GetService("ServerStorage").TourSignals.GrantCash.Event:Connect(function(amount: number)
-	for player in profiles do
-		PlayerState.addCash(player, amount)
-	end
-end)
 
 -- Copies what the HUD shows onto Player attributes: the only state the client is sent.
 function PlayerState.publish(player: Player)

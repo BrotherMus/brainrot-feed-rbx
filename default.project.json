@@ -2,10 +2,15 @@
   "name": "doomscroll-dash",
   "tree": {
     "$className": "DataModel",
-    "ReplicatedStorage": {
-      "BrainrotBuilder": {
-        "$path": "src/shared/BrainrotBuilder.luau"
+    "ReplicatedFirst": {
+      "HudClient": {
+        "$path": "src/client/HudClient.client.luau"
       },
+      "MenuClient": {
+        "$path": "src/client/MenuClient.client.luau"
+      }
+    },
+    "ReplicatedStorage": {
       "BrainrotCatalog": {
         "$path": "src/shared/BrainrotCatalog.luau"
       },
@@ -15,21 +20,6 @@
     },
     "ServerScriptService": {
       "$path": "src/server"
-    },
-    "StarterGui": {
-      "Hud": {
-        "$className": "ScreenGui",
-        "$properties": {
-          "ResetOnSpawn": false,
-          "DisplayOrder": 5
-        },
-        "HudClient": {
-          "$path": "src/client/HudClient.client.luau"
-        },
-        "MenuClient": {
-          "$path": "src/client/MenuClient.client.luau"
-        }
-      }
     }
   }
 }

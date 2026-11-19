@@ -5,7 +5,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local GameConfig = require(ReplicatedStorage.GameConfig)
-local BaseStands = require(script.Parent.BaseStands)
+local BaseStands = require(script.Parent.WorldBases)
 local PlayerState = require(script.Parent.PlayerState)
 local Notify = ReplicatedStorage.Remotes.Notify
 

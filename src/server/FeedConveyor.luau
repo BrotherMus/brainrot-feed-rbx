@@ -1,11 +1,10 @@
--- FeedConveyor: the Feed. Posts (a brainrot riding a card) appear under THE FEED arch and
--- scroll down the lane in the middle of the phone. Each shows its name, rarity, price and
--- money per second, and the first player to pay for it carries it away.
+-- FeedConveyor: the Feed. Posts (a brainrot riding a card) scroll down the lane in the
+-- middle of the phone, each showing name, rarity, price and money per second, to be bought.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
-local BrainrotBuilder = require(ReplicatedStorage.BrainrotBuilder)
 local BrainrotCatalog = require(ReplicatedStorage.BrainrotCatalog)
 local GameConfig = require(ReplicatedStorage.GameConfig)
+local BrainrotModels = require(script.Parent.BrainrotModels)
 local CarryBrainrot = require(script.Parent.CarryBrainrot)
 local PlayerState = require(script.Parent.PlayerState)
 local Notify = ReplicatedStorage.Remotes.Notify
@@ -69,13 +68,13 @@ local function spawnPost(z: number)
 	spawnCount += 1
 	local id, mutation = BrainrotCatalog.rollForFeed(rng, if os.clock() < luckUntil then luck else 1)
 	local entry = BrainrotCatalog.get(id) :: BrainrotCatalog.Entry
-	local model = BrainrotBuilder.buildFromParts(id, mutation)
+	local model = BrainrotModels.cloneWithMutation(id, mutation)
 	local root = model.PrimaryPart :: BasePart
 	local column = if spawnCount % 2 == 0 then -1 else 1 -- two columns, each facing its side's bases
 	local at = Vector3.new(column * 6.8, 0.75, z)
 	local facing = CFrame.lookAt(at, at + Vector3.new(column, 0, 0))
 	model:PivotTo(facing)
-	weldedPart(model, "PostCard", Vector3.new(12, 0.3, 12), CFrame.new(at.X, 0.58, z), Color3.fromRGB(241, 245, 249), Enum.Material.SmoothPlastic)
+	weldedPart(model, "PostCard", Vector3.new(12, 0.3, 12), CFrame.new(at.X, 0.58, z), Color3.new(1, 1, 1), Enum.Material.SmoothPlastic)
 	weldedPart(model, "PostHeader", Vector3.new(12, 0.34, 2.2), CFrame.new(at.X, 0.59, z - 4.9), entry.color, Enum.Material.Neon)
 
 	-- physics carries it down the lane so every client sees it glide, not hop
@@ -98,6 +97,7 @@ local function spawnPost(z: number)
 	local post: Post = { model = model, id = id, mutation = mutation, price = BrainrotCatalog.priceOf(id, mutation) }
 	local prompt = Instance.new("ProximityPrompt")
 	prompt.Name = "BuyPrompt"
+	prompt.Style = Enum.ProximityPromptStyle.Custom
 	prompt.ActionText = "Buy " .. GameConfig.formatCash(post.price)
 	prompt.ObjectText = entry.name
 	prompt.MaxActivationDistance = 14

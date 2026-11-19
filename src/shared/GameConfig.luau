@@ -21,7 +21,7 @@ GameConfig.DROPPED_LIFETIME = 25 -- seconds a dropped brainrot waits on the floo
 GameConfig.FEED = { SPEED = 8, SPAWN_EVERY = 2.4, HALF_WIDTH = 14, START_Z = -196, END_Z = 196 }
 GameConfig.THUMB = { EVERY_MIN = 140, EVERY_MAX = 200, WARNING = 6, SWIPE_SECONDS = 3.2, HIT_HALF_WIDTH = 20 }
 GameConfig.BOOST = { EVERY = 210, LASTS = 45, MULTIPLIER = 2 }
-GameConfig.THIEF = { EVERY_MIN = 75, EVERY_MAX = 120, GRAB_SECONDS = 3.5, SPEED = 26, MIN_BRAINROTS = 2 }
+GameConfig.THIEF = { EVERY_MIN = 80, EVERY_MAX = 130, GRAB_SECONDS = 6, SPEED = 24, MIN_BRAINROTS = 2 }
 GameConfig.STEAL_HOLD = 1.6 -- seconds a player holds the prompt to steal
 
 -- level 0 is the start; cost of the next level is baseCost * growth ^ level

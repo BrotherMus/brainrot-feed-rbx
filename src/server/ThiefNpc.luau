@@ -1,20 +1,18 @@
--- ThiefNpc: the Scam Bot, a flying pop-up ad that steals so the game has a thief even
--- when you play alone. Every minute or two it picks an unlocked base, flies in, grabs a
--- brainrot and makes for the charging port. Going Private turns it away, and any player
--- who reaches it can BLOCK it to send the brainrot home and earn a reward.
+-- ThiefNpc: the Scam Bot, a flying pop-up ad that steals from unlocked bases so there is
+-- a thief even when you play alone. Go Private turns it away; BLOCK it to get the loot back.
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local ServerStorage = game:GetService("ServerStorage")
 
-local BrainrotBuilder = require(ReplicatedStorage.BrainrotBuilder)
 local BrainrotCatalog = require(ReplicatedStorage.BrainrotCatalog)
 local GameConfig = require(ReplicatedStorage.GameConfig)
 local BaseLock = require(script.Parent.BaseLock)
-local BaseStands = require(script.Parent.BaseStands)
+local BaseStands = require(script.Parent.WorldBases)
+local BrainrotModels = require(script.Parent.BrainrotModels)
 local PlayerState = require(script.Parent.PlayerState)
 local Notify = ReplicatedStorage.Remotes.Notify
 
 local THIEF = GameConfig.THIEF
-local ESCAPE_POINT = Vector3.new(0, 9, 226) -- just past the SEEN IT arch, over the charging port
+local ESCAPE_POINT = Vector3.new(0, 9, 226) -- over the charging port
 
 local ThiefNpc = {}
 
@@ -103,7 +101,7 @@ function ThiefNpc.raidBase(base: BaseStands.Base)
 
 	if stolenId then
 		local name = (BrainrotCatalog.get(stolenId) :: BrainrotCatalog.Entry).name
-		local loot = BrainrotBuilder.buildFromParts(stolenId, stolenMutation)
+		local loot = BrainrotModels.cloneWithMutation(stolenId, stolenMutation)
 		local lootRoot = loot.PrimaryPart :: BasePart
 		loot:PivotTo(body.CFrame * CFrame.new(0, -9.5, 0))
 		lootRoot.Anchored = false
@@ -141,11 +139,6 @@ function ThiefNpc.raidBase(base: BaseStands.Base)
 	flyTo(raid, body.Position + Vector3.new(0, 90, 60), 60, 3)
 	bot:Destroy()
 	raidRunning = false
-end
-
--- For the tour: asks the running game to rob a base that has a brainrot, right now.
-function ThiefNpc.raidNow()
-	ServerStorage.TourSignals.RaidNow:Fire()
 end
 
 function ThiefNpc.start()

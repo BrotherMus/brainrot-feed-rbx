@@ -1,7 +1,6 @@
--- GiantThumbHazard: every few minutes a thumb the size of a building swipes up the Feed.
--- The lane flashes red and every screen shows a warning first. Anyone still on the Feed
--- when it passes is knocked flying and drops what they carry; the posts it passes are
--- swiped away and the Feed comes back "refreshed" with rarer brainrots for a while.
+-- GiantThumbHazard: every few minutes a giant thumb swipes up the Feed, after a warning.
+-- Anyone still on the lane is knocked flying and drops what they carry; the posts it
+-- passes are swiped away and the Feed comes back with rarer brainrots for a while.
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
@@ -92,11 +91,6 @@ function GiantThumbHazard.swipeTheFeed()
 	FeedConveyor.freshFeed(2.2, 25)
 	Notify:FireAllClients("Feed refreshed! Rarer brainrots for 25 seconds", "good")
 	swiping = false
-end
-
--- For the tour: asks the running game for a swipe right now, whoever calls it.
-function GiantThumbHazard.swipeNow()
-	ServerStorage.TourSignals.SwipeNow:Fire()
 end
 
 function GiantThumbHazard.start()

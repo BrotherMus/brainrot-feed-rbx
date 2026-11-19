@@ -4,7 +4,7 @@
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local GameConfig = require(ReplicatedStorage.GameConfig)
-local BaseStands = require(script.Parent.BaseStands)
+local BaseStands = require(script.Parent.WorldBases)
 local IncomeTicker = require(script.Parent.IncomeTicker)
 local Notify = ReplicatedStorage.Remotes.Notify
 
@@ -45,11 +45,6 @@ function AlgorithmBoostEvent.payDoubleFor(seconds: number)
 	workspace:SetAttribute("BoostUntil", 0)
 	glowBaseTrims(false)
 	running = false
-end
-
--- For the tour: asks the running game to start a boost right now.
-function AlgorithmBoostEvent.boostNow()
-	game:GetService("ServerStorage").TourSignals.BoostNow:Fire()
 end
 
 function AlgorithmBoostEvent.start()
