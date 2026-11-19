@@ -1,67 +1,64 @@
 {
-  "name": "house-dodge",
+  "name": "doomscroll-dash",
   "tree": {
     "$className": "DataModel",
-    "Players": {
-      "$properties": {
-        "CharacterAutoLoads": false
+    "ReplicatedStorage": {
+      "BrainrotCatalog": {
+        "$path": "src/shared/BrainrotCatalog.luau"
+      },
+      "EconomyRules": {
+        "$path": "src/shared/EconomyRules.luau"
       }
     },
     "ServerScriptService": {
-      "Server": {
-        "$path": "src/server"
+      "AlgorithmBoostEvent": {
+        "$path": "src/server/AlgorithmBoostEvent.luau"
+      },
+      "BaseStandsIncome": {
+        "$path": "src/server/BaseStandsIncome.luau"
+      },
+      "BrainrotCarry": {
+        "$path": "src/server/BrainrotCarry.luau"
+      },
+      "BrainrotSpawner": {
+        "$path": "src/server/BrainrotSpawner.luau"
+      },
+      "FeedConveyor": {
+        "$path": "src/server/FeedConveyor.luau"
+      },
+      "GameServer": {
+        "$path": "src/server/GameServer.server.luau"
+      },
+      "GiantThumbHazard": {
+        "$path": "src/server/GiantThumbHazard.luau"
+      },
+      "GoViralRebirth": {
+        "$path": "src/server/GoViralRebirth.luau"
+      },
+      "PlayerState": {
+        "$path": "src/server/PlayerState.luau"
+      },
+      "StealingAndBaseLock": {
+        "$path": "src/server/StealingAndBaseLock.luau"
+      },
+      "ThiefNpc": {
+        "$path": "src/server/ThiefNpc.luau"
+      },
+      "UpgradeShop": {
+        "$path": "src/server/UpgradeShop.luau"
       }
     },
     "StarterPlayer": {
       "StarterPlayerScripts": {
-        "Client": {
-          "$path": "src/client"
+        "BigPrompts": {
+          "$path": "src/client/BigPrompts.luau"
+        },
+        "HudClient": {
+          "$path": "src/client/HudClient.client.luau"
+        },
+        "IndexPanel": {
+          "$path": "src/client/IndexPanel.luau"
         }
-      }
-    },
-    "Workspace": {
-      "$properties": {
-        "FilteringEnabled": true
-      },
-      "Baseplate": {
-        "$className": "Part",
-        "$properties": {
-          "Anchored": true,
-          "Color": [
-            0.38823,
-            0.37254,
-            0.38823
-          ],
-          "Locked": true,
-          "Position": [
-            0,
-            -10,
-            0
-          ],
-          "Size": [
-            512,
-            20,
-            512
-          ]
-        }
-      }
-    },
-    "Lighting": {
-      "$properties": {
-        "Ambient": [
-          0,
-          0,
-          0
-        ],
-        "Brightness": 2,
-        "GlobalShadows": true,
-        "Outlines": false,
-        "Technology": "Voxel"
-      }
-    },
-    "SoundService": {
-      "$properties": {
-        "RespectFilteringEnabled": true
       }
     }
   }
