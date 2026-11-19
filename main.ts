@@ -1,9 +1,10 @@
-// Doomscroll Dash, a roblox-brainrot-01 entry (Node 22, standard library only). The game is built in
-// Roblox Studio and saved as game.rbxl; src/ holds every script of that place (tools/sync-src.sh writes it
-// with `rojo syncback`), so this program never builds the place: it hands it in. It copies game.rbxl, src/,
-// screenshots/ and PLAY.json from beside this file to /output and writes /output/dossier.json, the summary
-// the judge reads, with the vendored make.fun library. screenshots/1-cover.jpg is the cover and the
-// thumbnail uploaded for the game on Roblox.
+// A working roblox-brainrot-01 entry (Node 22, standard library only): the game is this directory's Rojo
+// project, built into game.rbxl with `rojo build default.project.json --output game.rbxl`, and the program
+// hands it in. It copies game.rbxl, src/, screenshots/ and PLAY.json from beside this file to /output and
+// writes /output/dossier.json, the summary the judge reads, with the vendored make.fun library. A starting
+// point, not a winner: it is a grey square that moves with the arrow keys. Build your game, rebuild
+// game.rbxl, put your PNG or JPEG screenshots in screenshots/ (the first by name is the cover, and one of
+// them is the thumbnail you upload for your game on Roblox) and fill in PLAY.json with your published place.
 //
 // Every name under /output starts with a letter, a digit or _ and holds only letters, digits, . _ and -: the
 // grader fails an entry whose output holds any other, so a file such as .gitkeep or .DS_Store copied in fails it.
@@ -12,7 +13,7 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-roblox.ts';
@@ -22,17 +23,6 @@ const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
 /** cpSync's filter: leave out every file and directory whose name starts with a dot (.gitkeep, .DS_Store, .git). */
 const notDotted = (path: string): boolean => !basename(path).startsWith('.');
-
-// Doomscroll Dash hands in a place saved from Roblox Studio, so nothing here rebuilds it. Before copying,
-// refuse the two mistakes that are easy to make by hand and that the gate would refuse later anyway:
-// a PLAY.json still naming no published place, and a screenshots/ folder that is not 3 or 4 pictures.
-const play = JSON.parse(readFileSync(join(here, 'PLAY.json'), 'utf8')) as { place_id?: unknown; universe_id?: unknown };
-for (const key of ['place_id', 'universe_id'] as const) {
-  const id = play[key];
-  if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0) throw new Error(`PLAY.json: ${key} must be the published experience's id, not ${String(id)}`);
-}
-const pictures = readdirSync(join(here, 'screenshots')).filter((name) => /\.(png|jpe?g)$/i.test(name) && notDotted(name));
-if (pictures.length < 3 || pictures.length > 4) throw new Error(`screenshots/ holds ${pictures.length} pictures: the entry needs 3 or 4`);
 
 copyFileSync(join(here, 'game.rbxl'), join(out, 'game.rbxl'));
 copyFileSync(join(here, 'PLAY.json'), join(out, 'PLAY.json'));
