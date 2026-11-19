@@ -1,67 +1,34 @@
 {
-  "name": "house-dodge",
+  "name": "doomscroll-dash",
   "tree": {
     "$className": "DataModel",
-    "Players": {
-      "$properties": {
-        "CharacterAutoLoads": false
+    "ReplicatedStorage": {
+      "BrainrotBuilder": {
+        "$path": "src/shared/BrainrotBuilder.luau"
+      },
+      "BrainrotCatalog": {
+        "$path": "src/shared/BrainrotCatalog.luau"
+      },
+      "GameConfig": {
+        "$path": "src/shared/GameConfig.luau"
       }
     },
     "ServerScriptService": {
-      "Server": {
-        "$path": "src/server"
-      }
+      "$path": "src/server"
     },
-    "StarterPlayer": {
-      "StarterPlayerScripts": {
-        "Client": {
-          "$path": "src/client"
-        }
-      }
-    },
-    "Workspace": {
-      "$properties": {
-        "FilteringEnabled": true
-      },
-      "Baseplate": {
-        "$className": "Part",
+    "StarterGui": {
+      "Hud": {
+        "$className": "ScreenGui",
         "$properties": {
-          "Anchored": true,
-          "Color": [
-            0.38823,
-            0.37254,
-            0.38823
-          ],
-          "Locked": true,
-          "Position": [
-            0,
-            -10,
-            0
-          ],
-          "Size": [
-            512,
-            20,
-            512
-          ]
+          "ResetOnSpawn": false,
+          "DisplayOrder": 5
+        },
+        "HudClient": {
+          "$path": "src/client/HudClient.client.luau"
+        },
+        "MenuClient": {
+          "$path": "src/client/MenuClient.client.luau"
         }
-      }
-    },
-    "Lighting": {
-      "$properties": {
-        "Ambient": [
-          0,
-          0,
-          0
-        ],
-        "Brightness": 2,
-        "GlobalShadows": true,
-        "Outlines": false,
-        "Technology": "Voxel"
-      }
-    },
-    "SoundService": {
-      "$properties": {
-        "RespectFilteringEnabled": true
       }
     }
   }

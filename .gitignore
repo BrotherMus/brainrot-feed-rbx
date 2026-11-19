@@ -1,0 +1,4 @@
+# Roblox Studio's lock on the open place file
+game.rbxl.lock
+# main.ts writes here when run outside the grader
+out/

@@ -13,7 +13,7 @@
 // Outside the grader's container, MAKEFUN_OUTPUT_DIR stands in for /output:
 //   mkdir -p out && MAKEFUN_OUTPUT_DIR=out node main.ts
 
-import { copyFileSync, cpSync, existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { copyFileSync, cpSync, existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { basename, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildDossier } from './vendor/makefun-roblox.ts';
@@ -23,6 +23,17 @@ const out = process.env.MAKEFUN_OUTPUT_DIR ?? '/output';
 
 /** cpSync's filter: leave out every file and directory whose name starts with a dot (.gitkeep, .DS_Store, .git). */
 const notDotted = (path: string): boolean => !basename(path).startsWith('.');
+
+// Doomscroll Dash hands in a place saved from Roblox Studio, so nothing here rebuilds it. Before copying,
+// refuse the two mistakes that are easy to make by hand and that the gate would refuse later anyway:
+// a PLAY.json still naming no published place, and a screenshots/ folder that is not 3 or 4 pictures.
+const play = JSON.parse(readFileSync(join(here, 'PLAY.json'), 'utf8')) as { place_id?: unknown; universe_id?: unknown };
+for (const key of ['place_id', 'universe_id'] as const) {
+  const id = play[key];
+  if (typeof id !== 'number' || !Number.isSafeInteger(id) || id <= 0) throw new Error(`PLAY.json: ${key} must be the published experience's id, not ${String(id)}`);
+}
+const pictures = readdirSync(join(here, 'screenshots')).filter((name) => /\.(png|jpe?g)$/i.test(name) && notDotted(name));
+if (pictures.length < 3 || pictures.length > 4) throw new Error(`screenshots/ holds ${pictures.length} pictures: the entry needs 3 or 4`);
 
 copyFileSync(join(here, 'game.rbxl'), join(out, 'game.rbxl'));
 copyFileSync(join(here, 'PLAY.json'), join(out, 'PLAY.json'));
